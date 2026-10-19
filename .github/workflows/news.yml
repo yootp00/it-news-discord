@@ -27,7 +27,12 @@ jobs:
       - name: Fetch feeds and post to Discord
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          # 아래는 선택: 등록하면 그 종류만 해당 채널로, 없으면 DISCORD_WEBHOOK_URL 채널로
           DISCORD_WEBHOOK_OUTAGE: ${{ secrets.DISCORD_WEBHOOK_OUTAGE }}
+          DISCORD_WEBHOOK_SECURITY: ${{ secrets.DISCORD_WEBHOOK_SECURITY }}
+          DISCORD_WEBHOOK_RELEASE: ${{ secrets.DISCORD_WEBHOOK_RELEASE }}
+          DISCORD_WEBHOOK_AI: ${{ secrets.DISCORD_WEBHOOK_AI }}
+          DISCORD_WEBHOOK_NEWS: ${{ secrets.DISCORD_WEBHOOK_NEWS }}
         run: python3 news_bot.py ${{ inputs.test && '--test' || '' }}
 
       # 이미 보낸 글 목록(state.json)을 저장소에 커밋해 다음 실행에 이어 쓴다
