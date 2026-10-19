@@ -19,11 +19,13 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
 STATE_FILE = BASE / "state.json"
+MAX_ITEMS_PER_FEED = 100  # 피드 상단(최신) 몇 개만 본다. MAX_SEEN 보다 작아야 옛 글이 재전송되지 않음
 MAX_SEEN_PER_FEED = 300
 MAX_POSTS_PER_RUN = 20
 
 CATEGORY_STYLE = {
     "outage":  {"color": 0xE53935, "label": "🚨 장애"},
+    "security": {"color": 0xFB8C00, "label": "🔐 보안"},
     "release": {"color": 0x1E88E5, "label": "🚀 릴리즈"},
     "ai":      {"color": 0x8E24AA, "label": "🤖 AI"},
     "news":    {"color": 0x43A047, "label": "📰 IT 뉴스"},
@@ -155,7 +157,7 @@ def main():
     for feed in feeds:
         try:
             if feed["url"] not in cache:
-                cache[feed["url"]] = parse_feed(fetch(feed["url"]))
+                cache[feed["url"]] = parse_feed(fetch(feed["url"]))[:MAX_ITEMS_PER_FEED]
             items = cache[feed["url"]]
         except Exception as err:
             print(f"[실패] {feed['name']}: {err}", file=sys.stderr)

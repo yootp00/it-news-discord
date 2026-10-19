@@ -10,9 +10,22 @@
   {"name": "HN: 장애 이슈",         "category": "outage",  "url": "https://hnrss.org/newest?points=100",
    "include": "(?i)\\boutage|\\bis down\\b|went down|downtime|postmortem|post-mortem"},
 
+  {"name": "Socket (공급망 보안)",  "category": "security", "url": "https://socket.dev/api/blog/feed.atom"},
+  {"name": "The Hacker News",      "category": "security", "url": "https://feeds.feedburner.com/TheHackersNews",
+   "include": "(?i)supply.chain|malicious (package|librar|npm|sdk)|\\b(npm|pypi|maven|gradle|cocoapods|pub\\.dev|crates\\.io|nuget)\\b|\\b(android|ios|iphone|flutter|firebase|xcode|kotlin|swift)\\b|github|backdoor|hijack"},
+  {"name": "BleepingComputer",     "category": "security", "url": "https://www.bleepingcomputer.com/feed/",
+   "include": "(?i)supply.chain|malicious (package|librar|npm|sdk)|\\b(npm|pypi|maven|gradle|cocoapods|pub\\.dev|nuget)\\b|\\b(android|ios|iphone|flutter|firebase|xcode)\\b|github|backdoor|hijack"},
+  {"name": "KISA 보호나라",         "category": "security", "url": "https://www.boho.or.kr/kr/rss.do?bbsId=B0000133",
+   "include": "(?i)android|ios|apple|google|chrome|firebase|npm|java|node|spring|안드로이드|애플|구글|오픈소스|공급망|라이브러리"},
+
   {"name": "Flutter Releases",     "category": "release", "url": "https://github.com/flutter/flutter/releases.atom"},
   {"name": "Flutter Blog",         "category": "release", "url": "https://medium.com/feed/flutter"},
+  {"name": "Dart Blog",            "category": "release", "url": "https://blog.dart.dev/feed.xml"},
   {"name": "Android Developers",   "category": "release", "url": "https://android-developers.googleblog.com/atom.xml"},
+  {"name": "Android Studio",       "category": "release", "url": "https://androidstudio.googleblog.com/feeds/posts/default",
+   "exclude": "(?i)\\bcanary\\b"},
+  {"name": "Kotlin Blog",          "category": "release", "url": "https://blog.jetbrains.com/kotlin/feed/"},
+  {"name": "Firebase Blog",        "category": "release", "url": "https://firebase.blog/rss.xml"},
   {"name": "Apple Developer News", "category": "release", "url": "https://developer.apple.com/news/rss/news.rss"},
 
   {"name": "HN: AI",               "category": "ai",      "url": "https://hnrss.org/newest?points=100",
