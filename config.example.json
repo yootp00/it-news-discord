@@ -1,0 +1,6 @@
+{
+  "webhooks": {
+    "default": "https://discord.com/api/webhooks/XXXX/YYYY",
+    "outage": ""
+  }
+}

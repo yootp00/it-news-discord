@@ -1,0 +1,23 @@
+[
+  {"name": "Firebase Status",      "category": "outage",  "url": "https://status.firebase.google.com/en/feed.atom"},
+  {"name": "Google Cloud Status",  "category": "outage",  "url": "https://status.cloud.google.com/en/feed.atom"},
+  {"name": "AWS Health",           "category": "outage",  "url": "https://status.aws.amazon.com/rss/all.rss"},
+  {"name": "GitHub Status",        "category": "outage",  "url": "https://www.githubstatus.com/history.rss"},
+  {"name": "Cloudflare Status",    "category": "outage",  "url": "https://www.cloudflarestatus.com/history.rss",
+   "exclude": "^[A-Z]{3} \\(.*\\) on \\d{4}-|[Ss]cheduled|[Mm]aintenance"},
+  {"name": "Claude Status",        "category": "outage",  "url": "https://status.claude.com/history.rss"},
+  {"name": "OpenAI Status",        "category": "outage",  "url": "https://status.openai.com/history.rss"},
+  {"name": "HN: 장애 이슈",         "category": "outage",  "url": "https://hnrss.org/newest?points=100",
+   "include": "(?i)\\boutage|\\bis down\\b|went down|downtime|postmortem|post-mortem"},
+
+  {"name": "Flutter Releases",     "category": "release", "url": "https://github.com/flutter/flutter/releases.atom"},
+  {"name": "Flutter Blog",         "category": "release", "url": "https://medium.com/feed/flutter"},
+  {"name": "Android Developers",   "category": "release", "url": "https://android-developers.googleblog.com/atom.xml"},
+  {"name": "Apple Developer News", "category": "release", "url": "https://developer.apple.com/news/rss/news.rss"},
+
+  {"name": "HN: AI",               "category": "ai",      "url": "https://hnrss.org/newest?points=100",
+   "include": "(?i)\\b(claude|anthropic|openai|gpt|gemini|llm|deepseek|mistral|llama)\\b"},
+
+  {"name": "GeekNews",             "category": "news",    "url": "https://news.hada.io/rss/news"},
+  {"name": "Hacker News Top",      "category": "news",    "url": "https://hnrss.org/frontpage?points=300"}
+]
