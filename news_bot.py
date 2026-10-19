@@ -135,14 +135,22 @@ def main():
         if env_hook:
             webhooks[category] = env_hook
     default_hook = os.environ.get("DISCORD_WEBHOOK_URL") or webhooks.get("default")
-    if not args.dry_run and not default_hook:
-        sys.exit("config.json 의 webhooks.default 또는 DISCORD_WEBHOOK_URL 을 설정하세요.")
+    # 종류별 웹훅이 다 있으면 기본 웹훅은 없어도 된다. 갈 곳 없는 종류만 건너뛴다.
+    unrouted = [c for c in CATEGORY_STYLE if not (webhooks.get(c) or default_hook)]
+    if not args.dry_run:
+        if len(unrouted) == len(CATEGORY_STYLE):
+            sys.exit("웹훅이 없습니다. DISCORD_WEBHOOK_URL 또는 DISCORD_WEBHOOK_<종류> 를 설정하세요.")
+        if unrouted:
+            print(f"[경고] 웹훅이 없어 건너뛰는 종류: {', '.join(unrouted)}")
 
     if args.test:
         test_item = {"title": "✅ IT News Bot 연결 테스트", "link": "",
                      "summary": "이 메시지가 보이면 웹훅이 정상입니다. 이제 새 소식이 생기면 여기로 옵니다."}
-        for category, hook in {"news": default_hook, **webhooks}.items():
-            if hook and category in CATEGORY_STYLE:
+        targets = {c: webhooks[c] for c in CATEGORY_STYLE if webhooks.get(c)}
+        if default_hook and len(targets) < len(CATEGORY_STYLE):
+            targets.setdefault("news", default_hook)  # 기본 채널도 쓰이면 함께 확인
+        for category, hook in targets.items():
+            if hook:
                 ok = post_discord(hook, {"name": "테스트", "category": category}, test_item)
                 print(f"[테스트] {category}: {'성공' if ok else '실패'}")
                 if not ok:
@@ -177,7 +185,7 @@ def main():
         # 첫 실행에는 기존 글을 '본 것'으로만 기록해 도배를 막는다
         if not first_run:
             hook = webhooks.get(feed["category"]) or default_hook
-            for item in reversed(new_items):  # 오래된 것부터 전송
+            for item in reversed(new_items if hook else []):  # 오래된 것부터 전송
                 if posted >= MAX_POSTS_PER_RUN:
                     break
                 if post_discord(hook, feed, item):
