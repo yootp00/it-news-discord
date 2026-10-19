@@ -24,6 +24,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # 이미 보낸 글 목록(state.json)은 main 이 아닌 state 브랜치에 커밋 1개로만 보관한다
+      - name: Load state
+        run: |
+          if git fetch -q origin state:refs/remotes/origin/state; then
+            git show origin/state:state.json > state.json
+          fi
+
       - name: Fetch feeds and post to Discord
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
@@ -35,11 +42,18 @@ jobs:
           DISCORD_WEBHOOK_NEWS: ${{ secrets.DISCORD_WEBHOOK_NEWS }}
         run: python3 news_bot.py ${{ inputs.test && '--test' || '' }}
 
-      # 이미 보낸 글 목록(state.json)을 저장소에 커밋해 다음 실행에 이어 쓴다
+      # 바뀌었을 때만, 부모 없는 커밋 하나로 state 브랜치를 덮어쓴다 (기록이 쌓이지 않음)
       - name: Save state
         if: ${{ !inputs.test }}
         run: |
+          [ -f state.json ] || exit 0
+          if git cat-file -e origin/state:state.json 2>/dev/null && \
+             git show origin/state:state.json | cmp -s - state.json; then
+            exit 0
+          fi
           git config user.name "news-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add state.json
-          git diff --cached --quiet || (git commit -m "update state" && git push)
+          blob=$(git hash-object -w state.json)
+          tree=$(printf '100644 blob %s\tstate.json\n' "$blob" | git mktree)
+          commit=$(git commit-tree "$tree" -m "bot state")
+          git push -f -q origin "$commit:refs/heads/state"
