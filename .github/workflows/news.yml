@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "*/5 * * * *"  # GitHub 사정에 따라 수 분씩 지연될 수 있음
   workflow_dispatch:       # Actions 탭에서 수동 실행
+    inputs:
+      test:
+        description: "디스코드로 테스트 메시지 보내기"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -23,10 +28,11 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           DISCORD_WEBHOOK_OUTAGE: ${{ secrets.DISCORD_WEBHOOK_OUTAGE }}
-        run: python3 news_bot.py
+        run: python3 news_bot.py ${{ inputs.test && '--test' || '' }}
 
       # 이미 보낸 글 목록(state.json)을 저장소에 커밋해 다음 실행에 이어 쓴다
       - name: Save state
+        if: ${{ !inputs.test }}
         run: |
           git config user.name "news-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

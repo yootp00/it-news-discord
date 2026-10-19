@@ -91,16 +91,16 @@ def matches(feed, item):
 
 def post_discord(webhook, feed, item):
     style = CATEGORY_STYLE.get(feed["category"], CATEGORY_STYLE["news"])
-    payload = {
-        "username": "IT News Bot",
-        "embeds": [{
-            "title": item["title"][:256] or "(제목 없음)",
-            "url": item["link"] or None,
-            "description": item["summary"] or None,
-            "color": style["color"],
-            "footer": {"text": f"{style['label']} · {feed['name']}"},
-        }],
+    embed = {
+        "title": item["title"][:256] or "(제목 없음)",
+        "color": style["color"],
+        "footer": {"text": f"{style['label']} · {feed['name']}"},
     }
+    if item["link"]:
+        embed["url"] = item["link"]
+    if item["summary"]:
+        embed["description"] = item["summary"]
+    payload = {"username": "IT News Bot", "embeds": [embed]}
     data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
         webhook, data=data,
@@ -123,6 +123,7 @@ def post_discord(webhook, feed, item):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--test", action="store_true", help="웹훅 연결 확인용 메시지를 보낸다")
     args = parser.parse_args()
 
     config = load_json(BASE / "config.json", {})
@@ -134,6 +135,17 @@ def main():
     default_hook = os.environ.get("DISCORD_WEBHOOK_URL") or webhooks.get("default")
     if not args.dry_run and not default_hook:
         sys.exit("config.json 의 webhooks.default 또는 DISCORD_WEBHOOK_URL 을 설정하세요.")
+
+    if args.test:
+        test_item = {"title": "✅ IT News Bot 연결 테스트", "link": "",
+                     "summary": "이 메시지가 보이면 웹훅이 정상입니다. 이제 새 소식이 생기면 여기로 옵니다."}
+        for category, hook in {"news": default_hook, **webhooks}.items():
+            if hook and category in CATEGORY_STYLE:
+                ok = post_discord(hook, {"name": "테스트", "category": category}, test_item)
+                print(f"[테스트] {category}: {'성공' if ok else '실패'}")
+                if not ok:
+                    sys.exit(1)
+        return
 
     feeds = load_json(BASE / "feeds.json", [])
     state = load_json(STATE_FILE, {})
