@@ -53,8 +53,29 @@ def strip_html(text, limit=300):
     return text[:limit] + ("…" if len(text) > limit else "")
 
 
+def parse_apple_status(text):
+    """Apple 시스템 상태(jsonCallback({...})) 를 이벤트 목록으로 변환. 진행 중/해결을 따로 알린다."""
+    data = json.loads(text[text.index("(") + 1:text.rindex(")")])
+    status_ko = {"ongoing": "진행 중", "resolved": "해결됨", "upcoming": "예정"}
+    items = []
+    for service in data.get("services", []):
+        for e in service.get("events", []):
+            state = e.get("eventStatus", "")
+            items.append({
+                "id": f"{e.get('messageId')}:{state}",
+                "title": f"[{e.get('statusType', '')}] {service['serviceName'].strip()} - {status_ko.get(state, state)}",
+                "link": "https://developer.apple.com/system-status/",
+                "summary": f"{e.get('message', '')} ({e.get('startDate', '')} ~ {e.get('endDate') or '진행 중'})",
+                "_ts": e.get("epochStartDate") or 0,
+            })
+    return sorted(items, key=lambda i: i["_ts"], reverse=True)
+
+
 def parse_feed(raw):
     """RSS 2.0 과 Atom 을 모두 처리해 (id, title, link, summary) 목록을 최신순으로 반환."""
+    text = raw.decode("utf-8", errors="replace").lstrip()
+    if text.startswith("jsonCallback("):
+        return parse_apple_status(text)
     root = ET.fromstring(raw)
     items = []
     if root.tag == f"{ATOM}feed":

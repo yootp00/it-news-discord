@@ -7,6 +7,9 @@
    "exclude": "^[A-Z]{3} \\(.*\\) on \\d{4}-|[Ss]cheduled|[Mm]aintenance"},
   {"name": "Claude Status",        "category": "outage",  "url": "https://status.claude.com/history.rss"},
   {"name": "OpenAI Status",        "category": "outage",  "url": "https://status.openai.com/history.rss"},
+  {"name": "Google Play Console",  "category": "outage",  "url": "https://status.play.google.com/feed.atom"},
+  {"name": "Apple Developer Status", "category": "outage", "url": "https://www.apple.com/support/systemstatus/data/developer/system_status_en_US.js",
+   "exclude": "Apple Music|Podcasts|Apple News|News Publisher|MFi Portal|Device Enrollment|Videos|Contact Us"},
   {"name": "HN: 장애 이슈",         "category": "outage",  "url": "https://hnrss.org/newest?points=100",
    "include": "(?i)\\boutage|\\bis down\\b|went down|downtime|postmortem|post-mortem"},
 
@@ -45,5 +48,6 @@
    "include": "(?i)\\b(claude|anthropic|openai|gpt|gemini|llm|deepseek|mistral|llama)\\b"},
 
   {"name": "GeekNews",             "category": "news",    "url": "https://news.hada.io/rss/news"},
+  {"name": "iOS Dev Weekly",       "category": "news",    "url": "https://iosdevweekly.com/issues.rss"},
   {"name": "Hacker News Top",      "category": "news",    "url": "https://hnrss.org/frontpage?points=300"}
 ]
