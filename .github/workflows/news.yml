@@ -27,7 +27,8 @@ jobs:
       # 이미 보낸 글 목록(state.json)은 main 이 아닌 state 브랜치에 커밋 1개로만 보관한다
       - name: Load state
         run: |
-          if git fetch -q origin state:refs/remotes/origin/state; then
+          # state 는 매번 부모 없이 덮어쓰므로 + 로 강제 갱신
+          if git fetch -q origin +state:refs/remotes/origin/state; then
             git show origin/state:state.json > state.json
           fi
 

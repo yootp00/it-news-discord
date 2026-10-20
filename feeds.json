@@ -27,6 +27,8 @@
   {"name": "Kotlin Blog",          "category": "release", "url": "https://blog.jetbrains.com/kotlin/feed/"},
   {"name": "Firebase Blog",        "category": "release", "url": "https://firebase.blog/rss.xml"},
   {"name": "Apple Developer News", "category": "release", "url": "https://developer.apple.com/news/rss/news.rss"},
+  {"name": "Apple Releases",       "category": "release", "url": "https://developer.apple.com/news/releases/rss/releases.rss",
+   "include": "^(iOS|iPadOS|Xcode|Swift)\\b"},
 
   {"name": "HN: AI",               "category": "ai",      "url": "https://hnrss.org/newest?points=100",
    "include": "(?i)\\b(claude|anthropic|openai|gpt|gemini|llm|deepseek|mistral|llama)\\b"},
